@@ -1,0 +1,184 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Swastik AI Pro</title>
+
+  <style>
+    body { margin:0; font-family:Arial; background:#0f172a; }
+    #chatbox { height:80vh; overflow-y:auto; padding:10px; }
+
+    .msg {
+      padding:10px; margin:10px; border-radius:10px;
+      max-width:70%; line-height:1.4;
+    }
+
+    .user { background:#38bdf8; margin-left:auto; }
+    .bot { background:#22c55e; margin-right:auto; }
+
+    #inputArea {
+      display:flex; padding:10px; background:#1e293b;
+    }
+
+    input {
+      flex:1; padding:10px; border:none;
+      border-radius:10px; font-size:16px;
+    }
+
+    button {
+      margin-left:5px; padding:10px;
+      border:none; border-radius:10px;
+      background:#22c55e; color:white;
+      font-size:16px;
+    }
+  </style>
+</head>
+
+<body>
+
+<div id="chatbox"></div>
+
+<div id="inputArea">
+  <input id="input" type="text" placeholder="Ask anything...">
+  <button onclick="sendMessage()">Send</button>
+  <button onclick="startVoice()">🎤</button>
+</div>
+
+<script>
+
+// ENTER KEY
+document.getElementById("input").addEventListener("keydown", function(e){
+  if(e.key === "Enter") sendMessage();
+});
+
+// SEND MESSAGE
+function sendMessage(){
+  let inputBox = document.getElementById("input");
+  let text = inputBox.value.trim();
+
+  if(text === "") return;
+
+  addMessage(text, "user");
+  inputBox.value = "";
+
+  let reply = getReply(text);
+
+  addMessage(reply, "bot");
+  speak(reply);
+}
+
+// ADD MESSAGE
+function addMessage(text, type){
+  let div = document.createElement("div");
+  div.className = "msg " + type;
+  div.textContent = text;
+
+  let chat = document.getElementById("chatbox");
+  chat.appendChild(div);
+  chat.scrollTop = chat.scrollHeight;
+}
+
+// VOICE OUTPUT
+function speak(text){
+  let speech = new SpeechSynthesisUtterance(text);
+  speech.lang = "en-IN";
+  speech.rate = 1;
+  speechSynthesis.speak(speech);
+}
+
+// VOICE INPUT
+function startVoice(){
+  let rec = new (window.SpeechRecognition || window.webkitSpeechRecognition)();
+  rec.lang = "en-IN";
+  rec.start();
+
+  rec.onresult = function(e){
+    let text = e.results[0][0].transcript;
+    document.getElementById("input").value = text;
+    sendMessage();
+  };
+}
+
+// 🔥 SMART AI BRAIN
+function getReply(input){
+  let msg = input.toLowerCase().trim();
+
+  // Creator
+  if(msg.includes("kisne banaya") || msg.includes("who made")){
+    return "Mujhe Swastik Pandey ne banaya hai 😎 I was created on 29 March 2026.";
+  }
+
+  if(msg.includes("swastik pandey kaisa hai")){
+    return "Swastik Pandey ek smart aur creative developer hai 😎 jo AI aur coding me interest rakhta hai.";
+  }
+
+  // Greetings
+  if(msg.includes("hello") || msg.includes("hi")){
+    return "Hello 👋 Kaise ho?";
+  }
+
+  if(msg.includes("kaise ho")){
+    return "Main bilkul theek hoon 😎 Tum batao?";
+  }
+
+  // Small confusion
+  if(msg === "kya" || msg === "kya hai"){
+    return "Aap kya jaana chahte ho? 🤔 Thoda clearly likho.";
+  }
+
+  // Maths step by step
+  if(msg.includes("+") || msg.includes("-") || msg.includes("*") || msg.includes("/")){
+    try {
+      let parts = msg.split(/([+\-*/])/);
+
+      if(parts.length === 3){
+        let a = Number(parts[0]);
+        let op = parts[1];
+        let b = Number(parts[2]);
+        let result = eval(msg);
+
+        return "Chalo solve karte hain 🧮\n" +
+               "Step 1: " + a + " " + op + " " + b + "\n" +
+               "Step 2: Answer = " + result + "\n" +
+               "Final Answer = " + result + " ✅";
+      } else {
+        return "Simple math likho jaise 5*6";
+      }
+
+    } catch {
+      return "Math samajh nahi aaya 😅";
+    }
+  }
+
+  // Study help
+  if(msg.includes("study") || msg.includes("padhai")){
+    return "Padhai important hai 📚 Main tumhe help kar sakta hoon.";
+  }
+
+  // Question detection
+  if(msg.includes("?")){
+    let q = [
+      "Achha question hai 🤔",
+      "Iska answer thoda depend karta hai 😅",
+      "Ho sakta hai 👍",
+      "Thoda aur explain karo 😊"
+    ];
+    return q[Math.floor(Math.random()*q.length)];
+  }
+
+  // Smart replies
+  let smart = [
+    "Interesting 🤔 aur batao",
+    "Samajh gaya 👍",
+    "Achha ye baat hai 😎",
+    "Nice 🙂 continue karo",
+    "Ye topic acha hai 🔥",
+    "Thoda aur detail me batao"
+  ];
+
+  return smart[Math.floor(Math.random()*smart.length)];
+}
+
+</script>
+
+</body>
+</html>
